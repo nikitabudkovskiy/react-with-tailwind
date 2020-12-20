@@ -1,11 +1,13 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
+    extend: {
+      colors: {
+        header: '#20232a',
+        skyBlue: '#61DAFB',
+        gunmental: '#282C34',
+      }
+    },
+  },  
 }
