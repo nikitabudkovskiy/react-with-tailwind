@@ -1,13 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, createRef } from 'react'
 import '../tailwind.output.css'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import classnames from 'classnames'
 
 export const Feeback = () => {
+  const body = document.querySelector('body')
 
   const [question, setQuestion] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccessModalShow, setIsSuccessModalShow] = useState(false)
+  const [isErrorModalShow, setIsErrorModalShow] = useState(false)
+  const [isErrorTextModalShow, setIsErrorTextModalShow] = useState(false)
 
   const onChangeQuestion = (event) => {
     setQuestion(event.target.value)
@@ -28,16 +33,34 @@ export const Feeback = () => {
         })
         if (data.status === 200) {
           setQuestion('')
-          setIsSuccessModalShow(true)
-       //   alert('Ваше сообщение успешно отправлено!')
+          setIsErrorModalShow(true)
+          setIsLoading(false)
+          disableBodyScroll(body)
         }
       } catch (error) {
+        setIsErrorModalShow(true)
         setIsLoading(false)
-        alert('Ваше не удалось отправить попробуйте еще раз.')
-        console.log(error)
+       disableBodyScroll(body)
       }
-      setIsLoading(false)
+    } else {
+      setIsErrorTextModalShow(true)
+      disableBodyScroll(body)
     }
+  }
+
+  const closeSuccessModalHandler = () => {
+    setIsSuccessModalShow(false)
+    enableBodyScroll(body)
+  }
+
+  const closeErrorModalHandler = () => {
+    setIsErrorModalShow(false)
+    enableBodyScroll(body)
+  }
+
+  const closeErrorTextModalShowHandler = () => {
+    setIsErrorTextModalShow(false)
+    enableBodyScroll(body)
   }
 
   return (
@@ -67,8 +90,6 @@ export const Feeback = () => {
           />
           Отправить
         </button>
-        {/* <svg  version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" */}
-
 
         <div className="flex justify-center pb-10">
           <a class="flex items-center mx-2 text-white hover:text-skyBlue" target="_blank" rel="noreferrer" href="https://telegram.me/DGonzo">
@@ -333,38 +354,77 @@ export const Feeback = () => {
         </div>
       </div>
 
-      <div class="modal opacity-1 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
-    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
-    
-    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
-      
-      {/* <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
-        <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-        </svg>
-        <span class="text-sm">(Esc)</span>
-      </div> */}
-
-      <div class="modal-content py-4 text-left px-6">
-
-        <div class="flex justify-between items-center pb-3">
-          <p class="text-2xl font-bold">Simple Modal!</p>
-          <div class="modal-close cursor-pointer z-50">
-            <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-            </svg>
+      <div className={classnames('modal fixed w-full h-full top-0 left-0 flex items-center z-10 justify-center', { hidden: !isSuccessModalShow })}>
+        <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div className="modal-container bg-white w-11/12 md:max-w-md mx-auto z-50 rounded shadow-lg overflow-y-auto">
+          <div className="modal-content py-4 text-left px-6">
+            <div className="flex justify-between items-center pb-1">
+              <div className="text-2xl font-bold">
+                Успешно!
+              </div>
+            </div>
+            <div className="text-sm text-gray-600">
+              Ваше сообщение было успешно отравлено на почтовый ящик, ожидайте ответа.
+            </div>
+            <div className="flex justify-center mt-3">
+              <button 
+                onClick={closeSuccessModalHandler}
+                className="modal-close px-4 bg-green-400 p-3 rounded-lg text-white w-52  cursor-pointer"
+              >
+                Закрыть
+              </button>
+            </div>
           </div>
         </div>
-
-  
-        <div class="flex justify-end pt-2">
-          <button class="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2">Action</button>
-          <button class="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400">Close</button>
-        </div>
-        
       </div>
-    </div>
-  </div>
+
+      <div className={classnames('modal fixed w-full h-full top-0 left-0 flex items-center z-10 justify-center', { hidden: !isErrorModalShow })}>
+        <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div className="modal-container bg-white w-11/12 md:max-w-md mx-auto z-50 rounded shadow-lg overflow-y-auto">
+          <div className="modal-content py-4 text-left px-6">
+            <div className="flex justify-between items-center pb-1">
+              <div className="text-2xl font-bold">
+                Ошибка!
+              </div>
+            </div>
+            <div className="text-sm text-gray-600">
+              Ваше сообщение не отправлено, попробуйте позже.
+            </div>
+            <div className="flex justify-center mt-3">
+              <button 
+                onClick={closeErrorModalHandler}
+                className="modal-close px-4 bg-red-500 p-3 rounded-lg text-white w-52  cursor-pointer"
+              >
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={classnames('modal fixed w-full h-full top-0 left-0 flex items-center z-10 justify-center', { hidden: !isErrorTextModalShow })}>
+        <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div className="modal-container bg-white w-11/12 md:max-w-md mx-auto z-50 rounded shadow-lg overflow-y-auto">
+          <div className="modal-content py-4 text-left px-6">
+            <div className="flex justify-between items-center pb-1">
+              <div className="text-2xl font-bold">
+                Ошибка!
+              </div>
+            </div>
+            <div className="text-sm text-gray-600">
+              Сообщение не может быть пустым!
+            </div>
+            <div className="flex justify-center mt-3">
+              <button 
+                onClick={closeErrorTextModalShowHandler}
+                className="modal-close px-4 bg-red-500 p-3 rounded-lg text-white w-52  cursor-pointer"
+              >
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </section>
   )

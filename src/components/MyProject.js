@@ -9,13 +9,11 @@ export const MyProject = () => (
   <section class="bg-black mt-20">
     <div className="text-center pt-5 pb-10 text-white text-4xl">
       Мои проекты
-
     </div>
-
 
     <div class="flex flex-wrap flex-col px-5">
 
-    <div class="mx-auto bg-white rounded-xl  overflow-hidden mb-10">
+    <div class="mx-auto min-w-full bg-white rounded-xl  overflow-hidden mb-10">
         <div class="md:flex">
           <div class="md:flex-shrink-0">
             <img class="h-48 w-full object-cover md:w-48" src={openQuality} alt="Man looking at item at a store" />
@@ -27,7 +25,7 @@ export const MyProject = () => (
         </div>
       </div>
 
-      <div class="mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-10">
+      <div class="mx-auto min-w-full bg-white rounded-xl shadow-md overflow-hidden mb-10">
         <div class="md:flex">
           <div class="md:flex-shrink-0">
             <img class="h-48 w-full object-cover md:w-48" src={homeowner} alt="Man looking at item at a store" />
@@ -39,7 +37,7 @@ export const MyProject = () => (
         </div>
       </div>
 
-      <div class="mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-10">
+      <div class="mx-auto min-w-full bg-white rounded-xl shadow-md overflow-hidden mb-10">
         <div class="md:flex">
           <div class="md:flex-shrink-0">
             <img class="h-48 w-full object-cover md:w-48" src={investTime} alt="Man looking at item at a store" />
@@ -51,7 +49,7 @@ export const MyProject = () => (
         </div>
       </div>
 
-      <div class="mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-10">
+      <div class="mx-auto min-w-full  bg-white rounded-xl shadow-md overflow-hidden mb-10">
         <div class="md:flex">
           <div class="md:flex-shrink-0">
             <img class="h-48 w-full object-cover md:w-48" src={union} alt="Man looking at item at a store" />
